@@ -73,17 +73,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_scss__);
 
 
-let editor = ace.edit("aceeditor");
+const editor = ace.edit("aceeditor");
 editor.focus();
 editor.setTheme("ace/theme/solarized_dark");
 editor.getSession().setMode("ace/mode/pgsql");
 
-let input = document.querySelector('input[name="query"]');
-console.log('input is' + input);
+const input = document.querySelector('input[name="query"]');
 
 editor.getSession().on("change", () => {
-  let code = editor.getSession().getValue();
-  console.log('code is ' + code);
+  const code = editor.getSession().getValue();
   input.value = code;
 });
 

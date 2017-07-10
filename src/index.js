@@ -1,15 +1,13 @@
 import "./style.scss";
 
-let editor = ace.edit("aceeditor");
+const editor = ace.edit("aceeditor");
 editor.focus();
 editor.setTheme("ace/theme/solarized_dark");
 editor.getSession().setMode("ace/mode/pgsql");
 
-let input = document.querySelector('input[name="query"]');
-console.log('input is' + input);
+const input = document.querySelector('input[name="query"]');
 
 editor.getSession().on("change", () => {
-  let code = editor.getSession().getValue();
-  console.log('code is ' + code);
+  const code = editor.getSession().getValue();
   input.value = code;
 });
