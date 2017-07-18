@@ -1,20 +1,13 @@
-<section class="section" id="map">
-  <div class="block">
-    {{query_result}}
-  </div>
-</section>
+<div id="map" class="map"></div>
 <section class="section" id="query_area">
-  <form action="/" method="GET">
-    <div class="columns">
-      <div class="column is-10">
-        <div id="aceeditor"></div>
-      </div>
-      <div class="column is-2">
-        <button class="button" type="submit">
-          Submit Query
-        </button>
-      </div>
-      <input name="query" type="hidden"/>
+  <div class="columns">
+    <div class="column is-10">
+      <div id="aceeditor"></div>
     </div>
-  </form>
+    <div class="column is-2">
+      <button class="button" type="submit" onclick="yasmin(); return false;">
+        Submit Query
+      </button>
+    </div>
+  </div>
 </section>

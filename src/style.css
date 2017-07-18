@@ -1,8 +1,14 @@
 html, body {
   height: 100%; }
 
-#map {
+.map {
   height: 50%; }
+
+section {
+  height: 50%; }
+  section div {
+    height: 100%;
+    width: 100%; }
 
 #query_area {
   height: 50%; }

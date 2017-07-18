@@ -78,12 +78,58 @@ editor.focus();
 editor.setTheme("ace/theme/solarized_dark");
 editor.getSession().setMode("ace/mode/pgsql");
 
-const input = document.querySelector('input[name="query"]');
 
-editor.getSession().on("change", () => {
-  const code = editor.getSession().getValue();
-  input.value = code;
+const map = new ol.Map({
+  layers: [
+    new ol.layer.Tile({
+      source: new ol.source.OSM(),
+    }),
+  ],
+  target: 'map',
+  controls: ol.control.defaults({
+    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+      collapsible: false,
+    }),
+  }),
+  view: new ol.View({
+    center: [0, 0],
+    zoom: 2,
+  }),
 });
+
+
+window.yasmin = () => {
+  const sql_query = editor.getSession().getValue();
+  const params = "?query=" + sql_query;
+
+  const url = "/municipios" + params;
+
+  const db_response = fetch(url)
+    .then((res) => {
+      res
+        .json()
+        .then((geojson) => {
+          console.log("PUDIIIIIIIM " + JSON.stringify(geojson));
+
+          const vectorSource = new ol.source.Vector({
+            features: (new ol.format.GeoJSON()).readFeatures(geojson),
+          });
+
+          const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+          });
+
+          map.addLayer(vectorLayer);
+          map.render();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 
 /***/ }),
@@ -126,7 +172,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "html, body {\n  height: 100%; }\n\n#map {\n  height: 50%; }\n\n#query_area {\n  height: 50%; }\n  #query_area form, #query_area div {\n    height: 100%; }\n\n#editor {\n  height: 100%; }\n", ""]);
+exports.push([module.i, "html, body {\n  height: 100%; }\n\n.map {\n  height: 50%; }\n\nsection {\n  height: 50%; }\n  section div {\n    height: 100%;\n    width: 100%; }\n\n#query_area {\n  height: 50%; }\n  #query_area form, #query_area div {\n    height: 100%; }\n\n#editor {\n  height: 100%; }\n", ""]);
 
 // exports
 
