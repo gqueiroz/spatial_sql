@@ -1,9 +1,9 @@
-"use strict";
+"use strict"
 
-const express = require("express");
+const express = require("express")
 
-const router = express.Router();
+const router = express.Router()
 
-router.use("/", require("./home"));
+router.use("/", require("./home"))
 
-module.exports = router;
+module.exports = router

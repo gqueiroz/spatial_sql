@@ -73,10 +73,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_scss__);
 
 
-const editor = ace.edit("aceeditor");
-editor.focus();
-editor.setTheme("ace/theme/solarized_dark");
-editor.getSession().setMode("ace/mode/pgsql");
+const editor = ace.edit("aceeditor")
+editor.focus()
+editor.setTheme("ace/theme/solarized_dark")
+editor.getSession().setMode("ace/mode/pgsql")
 
 
 const map = new ol.Map({
@@ -85,51 +85,68 @@ const map = new ol.Map({
       source: new ol.source.OSM(),
     }),
   ],
-  target: 'map',
+  target: "map",
   controls: ol.control.defaults({
-    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+    attributionOptions: ({
       collapsible: false,
     }),
   }),
   view: new ol.View({
+    projection: "EPSG:4326",
     center: [0, 0],
     zoom: 2,
   }),
-});
+})
 
 
-window.yasmin = () => {
-  const sql_query = editor.getSession().getValue();
-  const params = "?query=" + sql_query;
+const styles = {
+  "MultiPolygon": new ol.style.Style({
+    stroke: new ol.style.Stroke({
+      color: "red",
+      width: 1,
+    }),
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 0, 0.1)",
+    }),
+  }),
+}
 
-  const url = "/municipios" + params;
+const styleFunction = feature => styles[feature.getGeometry().getType()]
+
+
+window.eval_query = () => {
+  const sql_query = editor.getSession().getValue()
+  const params = "?query=" + sql_query
+
+  const url = "/municipios" + params
 
   const db_response = fetch(url)
-    .then((res) => {
-      res
-        .json()
-        .then((geojson) => {
-          console.log("PUDIIIIIIIM " + JSON.stringify(geojson));
+    .then(res => res.json())
+    .then(geojson => {
 
-          const vectorSource = new ol.source.Vector({
-            features: (new ol.format.GeoJSON()).readFeatures(geojson),
-          });
+      const features = {
+        type: "FeatureCollection",
+        features: geojson,
+      }
 
-          const vectorLayer = new ol.layer.Vector({
-            source: vectorSource,
-          });
+      console.log("Lista? " + JSON.stringify(features))
 
-          map.addLayer(vectorLayer);
-          map.render();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const vectorSource = new ol.source.Vector({
+        features: (new ol.format.GeoJSON()).readFeatures(features),
+      })
+
+      const vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
+        style: styleFunction,
+      })
+
+      map.addLayer(vectorLayer)
+      map.render()
     })
     .catch((err) => {
-      console.log(err);
-    });
-};
+      console.log(err)
+    })
+}
 
 
 /***/ }),
